@@ -28,7 +28,7 @@ class msocketx
 {
 public:
     msocketx();
-    virtual ~msocketx();
+    ~msocketx();
 public:
     // startup 最先调用,linux可以不用调用
     static bool startup();
