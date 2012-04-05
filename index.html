@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Xhblib by cullet</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Xhblib</h1>
+        <p>personal c++ library</p>
+        <p class="view"><a href="https://github.com/cullet/xhblib">View the Project on GitHub <small>cullet/xhblib</small></a></p>
+        <ul>
+          <li><a href="https://github.com/cullet/xhblib/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/cullet/xhblib/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/cullet/xhblib">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>Welcome to my GitHub Pages.</h3>
+
+<ul>
+<li>这个项目几乎是一个纸篓子,想到什么就扔什么进来.个人的平时工作的总结.很随性.</li>
+<li>这些类大多是基于windows系统.现在也在转linux.</li>
+</ul><h3>Code Overview</h3>
+
+<ul>
+<li><a href="https://github.com/cullet/xhblib/blob/master/msocketx.h">跨平台socket简单封装类</a></li>
+<li><a href="https://github.com/cullet/xhblib/blob/master/mthread.h">跨平台线程类</a></li>
+<li><a href="https://github.com/cullet/xhblib/blob/master/logx.h">高性能日志类</a></li>
+<li><a href="https://github.com/cullet/xhblib/blob/master/memoryx.h">高性能粒度内存池类</a></li>
+<li><a href="https://github.com/cullet/xhblib/blob/master/iocpx.h">iocp模型封装</a></li>
+<li>还有些小东西,如多线程锁,数据结构封装,数据库,平台特性,修改stl<a href="https://github.com/cullet/xhblib">等</a>.</li>
+</ul><div class="highlight">
+<pre><span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">l_</span> <span class="o">=</span> <span class="n">falselockx_</span><span class="p">,</span>
+    <span class="kt">long</span> <span class="n">ulmaxfilesize</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="n">nmaxlogfilenum</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="n">nflush</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
+    <span class="n">loghandlefn</span> <span class="n">loghandT</span> <span class="o">=</span> <span class="n">loghandledefault</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">logx</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">logx</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">m_nwritelevel</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">m_nwritecount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">m_logbuff</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+        <span class="n">m_stream</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+        <span class="n">m_bstdout</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="n">memset</span><span class="p">(</span><span class="n">m_szfilename</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">m_szfilename</span><span class="p">)</span> <span class="o">*</span> 
+            <span class="k">sizeof</span><span class="p">(</span><span class="n">TCHAR</span><span class="p">));</span>
+        <span class="n">memset</span><span class="p">(</span><span class="n">m_szfolderpath</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">m_szfolderpath</span><span class="p">)</span> <span class="o">*</span>
+            <span class="k">sizeof</span><span class="p">(</span><span class="n">TCHAR</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">logx</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">CloseStream</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m_logbuff</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">delete</span> <span class="p">[]</span> <span class="n">m_logbuff</span><span class="p">;</span> 
+            <span class="n">m_logbuff</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">TCHAR</span><span class="o">*</span> <span class="n">pfilename</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">pfilename</span> <span class="o">=</span> <span class="n">m_filequeue</span><span class="p">.</span><span class="n">pop_front</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">delete</span> <span class="p">[]</span> <span class="n">pfilename</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+ <span class="p">};</span>
+</pre>
+</div>
+
+
+<h3>Authors and Contributors</h3>
+
+<blockquote>
+<p>如果有处于相同学习期,或爱好的同学欢迎联系.</p>
+</blockquote>
+
+<h3>Support or Contact</h3>
+
+<p><img src="http://www.google.com/talk/service/resources/chaticon.gif" alt="gtalk"><a href="http://www.google.com/talk/service/badge/Start?tk=z01q6amlqdmj3o7tvepuc2c1bsu1co4uuc063nhn3k0labcq2i8qbkklj39trc9nqpk7uobhqgj98vgbrre6ghk8gsepu9qppjqda2dn38t608ja2rf2aof3fj0cjpe3r4o7oe72cdepeu98">与Alan Xu聊天</a></p>
+
+<p><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=1982141&amp;site=qq&amp;menu=yes"><img src="http://wpa.qq.com/pa?p=2:1982141:46" alt="点击这里给我发消息"></a></p>
+
+<p><a href="mailto:11she_232@163.com"><img src="http://pic.sdodo.com/tool/_tempf/0405/1333607632-90.gif" alt="email me"></a></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/cullet">cullet</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
