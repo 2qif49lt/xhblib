@@ -1,16 +1,17 @@
 #include "epollx.h"
 
+
 logx<mlockx_> g_log;
+bitpoolx_<mlockx_> g_mem;
 
 char* alloc(int n)
 {
     if(n > 0)
-        return new(nothrow) char[n];
+        return g_mem.alloc(n);
 }
 void release(char* pmem)
 {
-    if(pmem != NULL)
-        delete [] pmem;
+    g_mem.free(pmem);
 }
 
 bool setnoblock(int isock)

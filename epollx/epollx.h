@@ -17,12 +17,14 @@
 #include "mthread.h"
 #include "ptrqueuex.h"
 #include "logx.h"
+#include "memoryx.h"
 using namespace xhb;
 #include <map>
 #include <vector>
 using namespace std;
 
 extern logx<mlockx_> g_log;
+extern bitpoolx_<mlockx_> g_mem;
 
 typedef struct tagmsgx
 {
