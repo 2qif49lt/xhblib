@@ -1,4 +1,4 @@
-﻿#include "msocketx.h"
+#include "msocketx.h"
 #include <new>
 #ifdef _WIN32
 #pragma warning(disable:4244)
@@ -118,7 +118,7 @@ bool msocketx::setblock(bool bblock /* = false */)
     return ioctlsocket(m_sock, FIONBIO, &b) == 0;
 #else
     int flags = fcntl(m_sock, F_GETFL, 0); 
-    if (bblock)
+    if (!bblock)
         flags |= O_NONBLOCK;
     else
         flags &= (~O_NONBLOCK);  

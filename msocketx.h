@@ -1,9 +1,10 @@
-﻿#ifndef MSOCKETX_H_
+#ifndef MSOCKETX_H_
 #define MSOCKETX_H_
 
 #ifdef _WIN32
 #pragma comment(lib,"ws2_32.lib")
 #include "winsock2.h"
+#include "windows.h"
 typedef int socklen_t;
 #else
 #include <unistd.h>
@@ -28,7 +29,7 @@ class msocketx
 {
 public:
     msocketx();
-    ~msocketx();
+    virtual ~msocketx();
 public:
     // startup 最先调用,linux可以不用调用
     static bool startup();
