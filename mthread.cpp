@@ -1,4 +1,4 @@
-﻿#include "mthread.h"
+#include "mthread.h"
 #ifdef _WIN32
 #pragma warning(disable:4312)
 #endif
@@ -21,7 +21,7 @@ void mthread::mainfunction()
 unsigned int mthread::exitinstance()
 {
 	//do exit thing
-    brun = false;
+	brun = false;
 	return 0;
 }
 unsigned int mthread::run()
@@ -38,48 +38,50 @@ unsigned int mthread::run()
 #ifdef _WIN32
 DWORD WINAPI mthread::threadfunction(void* param)
 {
-    mthread* t = (mthread*)param;
-    unsigned int uiret = t->run();
-    return (DWORD)uiret;
+	mthread* t = (mthread*)param;
+	unsigned int uiret = t->run();
+	return (DWORD)uiret;
 }
 #else
 void* mthread::threadfunction(void* param)
 {
-    mthread* t = (mthread*)param;
-    unsigned int uiret = t->run();
-    return (void*)uiret;
+	mthread* t = (mthread*)param;
+	unsigned int uiret = t->run();
+	return (void*)uiret;
 }
 #endif
+
 bool mthread::start()
 {
 #ifdef _WIN32
-    DWORD dwthreadid = 0;
-    HANDLE hThread = NULL;
-    hThread = CreateThread( 
-        NULL,              // default security attributes
-        0,                 // use default stack size  
-        mthread::threadfunction,          // thread function 
-        (void*)this,             // argument to thread function 
-        0,                 // use default creation flags 
-        &dwthreadid);   // returns the thread identifier 
+	DWORD dwthreadid = 0;
+	HANDLE hThread = NULL;
+	hThread = CreateThread( 
+		NULL,              // default security attributes
+		0,                 // use default stack size  
+		mthread::threadfunction,          // thread function 
+		(void*)this,             // argument to thread function 
+		0,                 // use default creation flags 
+		&dwthreadid);   // returns the thread identifier 
 
-    if (hThread == NULL)
-    {
-        return false;
-    }
-    CloseHandle(hThread);
-    tid = dwthreadid;
+	if (hThread == NULL)
+	{
+		return false;
+	}
+//	CloseHandle(hThread);
+	tid = dwthreadid;
+	hdle = (void*)hThread;
 #else
-    pthread_t t;
+	pthread_t t;
 
-    int nret = pthread_create(&t,NULL,&threadfunction,(void*)this);
-    if (nret != 0)
-    {
-        return false;
-    }
-    tid = *(unsigned long*)(&t);
+	int nret = pthread_create(&t,NULL,&threadfunction,(void*)this);
+	if (nret != 0)
+	{
+		return false;
+	}
+	tid = *(unsigned long*)(&t);
 #endif
-    return true;
+	return true;
 }
 void mthread::millisleep(unsigned int uimillisecond)
 {
@@ -87,5 +89,24 @@ void mthread::millisleep(unsigned int uimillisecond)
 	Sleep(uimillisecond);
 #else
 	usleep(uimillisecond * 1000);
+#endif
+}
+mthread::~mthread()
+{
+#ifdef _WIN32
+	if(hdle != NULL)
+		CloseHandle((HANDLE)hdle);
+#else
+	
+#endif
+}
+void mthread::waitend()
+{
+#ifdef _WIN32
+	if(hdle)
+		WaitForSingleObject((HANDLE)hdle,INFINITE);
+#else
+	if(tid)
+		pthread_join((pthread_t)tid,NULL);
 #endif
 }
